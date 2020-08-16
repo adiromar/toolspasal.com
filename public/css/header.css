@@ -1,0 +1,148 @@
+*{
+	box-sizing: border-box;
+}
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index:200;
+  /*border:1px solid black;*/
+
+}
+.logo-size{
+	height: 55px;
+	width: auto;
+	padding:5px 10px;
+}
+.logo-cover{
+	background:white; 
+	height:55px;
+}
+.but-login{
+	height:55px;
+	padding-top: 20px;
+	background:linear-gradient(to right, white, #59c8df, #63b6d6 );
+	text-align: right;
+	font-size: 14px;
+}
+.but-login a:first-child{
+	border:2px solid white;
+	padding: 5px 10px !important;
+	color:white;
+	background:#25aaa0;
+}
+
+.but-login a:last-child{
+	border:2px solid white;
+	padding: 5px 10px !important;
+	color:white;
+	background: #3b5998;	
+}
+.but-login a{
+
+	margin-top: 10px;
+}
+.but-login a:hover{
+	text-decoration: none;
+	background:#363635;
+	color: white;
+}
+.link-color{
+	color:black;
+}
+.nav-cover{
+	background: white;
+
+}
+.nav-effect:after{
+	content:"";
+	display: block;
+	background: white;
+	height:3px;
+	width:0px;
+	transition: 0.1s ease-in ;
+}
+.nav-effect:hover:after{
+	height:3px;
+	width: 90%;
+	background:gray;
+}
+.brop-back{
+	background:DodgerBlue !important;
+	height:59px;
+}
+.list-back{
+	background:rgba(255, 255, 255,0.9);
+	box-shadow: 1px 1px 1px -0px rgb(0, 0, 0);
+	width:500px;
+	z-index:200;
+}
+.cata-back{
+	color: white;
+	background:rgba(255, 255, 255,0.9);
+	font-size: 17px;
+}
+.sel-back{
+	background: #E7717D;
+}
+.distr-back{
+	width:30%;
+	border-radius: 0px;
+	border:2px solid white;
+	display:inline-block;
+	margin-left:50px;
+}
+.form-search input[type=search]{
+	width: 30%;
+	border:none;
+	background: rgba(255, 255, 255,0.8);
+	color: black;
+	padding-left:10px; 
+	height: 38px;
+}
+.form-search{
+	padding:10px;
+	background:DodgerBlue;
+	height:59px;
+}
+.form-search button[type=submit]{
+	width: 15%;
+	border:3px solid white;
+	background: #E7717D;
+	color:white;
+	height: 38px;
+}
+.form-search button[type=submit]:hover{
+	background: rgba(247,160,153,0.7);
+}
+select{
+	width:30%;
+}
+
+@media (max-width: 575px) {
+ 	.back-offer{
+ 		
+ 	}
+
+ 	.form-search input[type=search]{
+		width: 55%;
+		
+	}
+	.form-search{
+		padding:10px;
+		background:DodgerBlue;
+	}
+	.form-search button[type=submit]{
+		width: 25%;
+		border:3px solid white;
+		background: #E7717D;
+		color:white;
+		height: 40px;
+	}
+	.form-search button[type=submit]:hover{
+		background: rgba(247,160,153,0.7);
+	}
+	select{
+		margin:10px;
+	}
+ }

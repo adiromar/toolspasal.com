@@ -1,0 +1,77 @@
+        @GET("/api/v1/order/most-bought-product")
+        Call<Response> getMostBoughtProduct();
+
+        @GET("/api/v1/products/search")
+        Call<Response> searchProducts(@Query("searchKey") String seachKey,
+                                      @Query("last_seen") Integer lastSeenId,
+                                      @Query("pageSize") Integer size,
+                                      @Query("action") String action);
+
+        @POST("/api/v1/wish-list")
+        Call<Response> addWishProduct(@Header("Authorization") String token,
+                                      @Body WishListDTO wishListDTO);
+
+        @PUT("/api/v1/wish-list/{wishId}")
+        Call<Response> removeWishProduct(@Header("Authorization") String token,
+                                         @Path("wishId") Integer wishId,
+                                         @Body WishListDTO wishListDTO);
+
+        @GET("/api/v1/users/pw-reset-token-verify")
+        Call<Response> verifyPasswordResetToken(@Query("token") String token);
+
+        @GET("/api/v1/users/reset-user")
+        Call<Response> sendPasswordResetEmail(@Query("email") String email);
+
+        @GET("/api/v1/users/update-password/{userId}")
+        Call<Response> updateUserPassword(@Path("userId")Integer userId,
+                                          @Query("password") String password);
+
+        @GET("/api/v1/users/activateUser")
+        Call<Response> activateUser(@Query("token") String token);
+
+        @GET("/api/v1/products/search/all")
+        Call<Response> getSearchResult(@Query("searchKey") String seachKey,
+                                       @Query("last_seen") Integer lastSeenId,
+                                       @Query("pageSize") Integer size,
+                                       @Query("action") String action);
+
+        
+
+        @POST("/api/v1/review")
+        Call<Response> addUserReview(@Header("Authorization") String token,
+                                     @Body ReviewDTO reviewDTO);
+
+
+        // filter of the products in the category
+        @GET("/api/v1/category/{categoryId}/product/rate")
+        Call<Response> getProductsBetweenRange(@Path("categoryId") Integer categoryId,
+                                               @Query("min") Float min,
+                                               @Query("max") Float max);
+
+        /*
+        * API for the Orders
+        * 1. Retrieve all orders for the User
+        * 2. Cancel Order
+        * 3. View Order Details
+        * */
+
+        
+
+        // 2. Cancel Order
+        @POST("/api/v1/order/cancel/{orderId}")
+        Call<Response> cancelOrder(@Header("Authorization") String token,
+                                   @Path("orderId") int orderId);
+
+        
+
+        // make order
+        @POST("/api/v1/order/confirm")
+        Call<Response> makeOrder(@Body NewOrderDto newOrderDto);
+
+        /* ******************------ END of ORDER ------ *********************** */
+
+        /************** About Data *******************/
+        @GET("/api/v1/about")
+        Call<Response> getAboutData();
+
+        

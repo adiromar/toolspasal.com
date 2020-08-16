@@ -1,0 +1,30 @@
+public class PaymentDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private int paymentId;
+    private int paymentMethodId;
+    private Double amount;
+    private Date paymentDate;
+    private boolean status;
+    private PaymentMethodDTO paymentMethod;
+    private String uniqueOrderIdentifier;
+}
+
+public class PaymentMethodDTO implements Serializable {
+    private static final long serialVersionUID = -599905439967762567L;
+    private int id;
+    private String paymentName;
+    private String paymentStatus;
+}
+
+public class OrderDTO {
+    private int orderId;
+    private int productId;
+    private Date orderDate;
+    private int orderStatus;
+    private int shippingDetailsId;
+    private int paymentDetailsId;
+    private int orderedBy;
+    private int quantity;
+}
+
+

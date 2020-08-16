@@ -1,0 +1,121 @@
+
+brand{
+	display:block;
+}
+.brand-img{
+	float: left;
+	padding: 4px ;
+	border:2px solid black;
+	margin:0px 20px;
+}
+.brand-img img{
+	height:100px;
+	width:100px;
+	border: 1px solid ;
+}
+.brand-disc{
+	text-align: justify;
+}
+.brand-disc p{
+	font-size: 17px;
+}
+.brand-disc h4{
+	margin: 15px;
+}
+.cover-brand-disc{
+	background-image: url("../image/brand-back.jpg");
+	background-repeat: no-repeat;
+	padding: 50px;
+	color:white;
+	border-radius: 4px;
+}
+.one-carousel{
+	margin:30px 0px;
+	padding:15px;
+	border:1px solid gray;
+}
+.one-carousel div img{
+	height: 270px;
+	padding:15px;
+	border:1px solid gray;
+}
+.one-carousel div h6{
+	padding:10px;
+	margin:0px;
+	text-align: center;
+	border:1px solid gray;
+	border-top: none;
+}
+.item:hover{
+	border:1px solid gray;
+	box-shadow: 1px 1px 1px 1px rgb(201, 181, 169);
+}
+
+
+.brand-item{
+	width:100%;
+	text-align: center;
+	border:1px solid gray;
+	margin:15px 0px;
+	
+	
+}
+.brand-item:hover{
+	box-shadow: 1px 1px 1px 1px rgb(201, 181, 169);
+}
+.brand-item img{
+	height:240px;
+	max-width: 100%;
+	padding: 15px;
+
+}
+.brand-item h6{
+	padding:5px;
+	margin:0px;
+	border-top:1px solid gray;
+}
+.brand-item p{
+	padding:0px 5px ;
+	margin:0px;
+}
+.brand-detail{
+	padding: 15px;
+}
+.brand-detail a{
+	border:1px solid black;
+	
+	padding: 5px 8px;
+	margin:0px 10px;
+	text-decoration: none;
+}
+.brand-detail a:first-child{
+	background: DodgerBlue;
+	color:black;
+	padding: 5px 16px;
+	border-radius: 3px;
+}
+
+.brand-detail a:nth-child(2){
+	background: #ff8400;
+	color:black;	
+}
+.product-cover{
+	border:1px solid gray;
+	padding: 15px;
+	margin: 50px 0px;
+}
+.product-cover:hover{
+	box-shadow: 1px 1px 2px 2px rgb(201, 181, 169);
+	
+}
+
+
+ @media (max-width: 575px) {
+ 	.back-offer{
+ 		padding:20px !important;
+ 	}
+ }
+
+
+
+

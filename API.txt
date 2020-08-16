@@ -1,0 +1,44 @@
+Base Url: http://encoderslab.com/iPasal
+
+@POST("api/login")
+@description Login with email and password
+@return UserDTO
+
+@POST("/api/users/register")
+@return UserDTO
+
+@GET("api/users/checkDuplicateEmail")
+@return boolean
+
+@GET("api/v1/users/checkUserName")
+@return boolean
+
+@GET("/api/slider")
+@return SliderDTO
+
+GET("/api/category")
+@return CategoryDTOs
+
+@GET("/api/category/featured")
+@return CategoryDTOs
+
+@GET("/api/category/parent/{parentId}")
+@return CategoryDTO
+
+@GET("/api/products/featured")
+@return ProductDTOs
+
+@GET("/api/products/category/{categoryId}")
+@return ProductDTOs
+
+@GET("/api/products/{productId}")
+@return ProductDTO
+
+
+
+
+
+
+
+
+

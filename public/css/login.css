@@ -1,0 +1,213 @@
+body{
+	
+}	
+.tran-back{
+	background:#EAEAEA;
+	padding: 50px;
+	border:1px solid lightgray;
+	border-top: 2px solid darkslategrey;
+}
+.but-user{
+	padding: 2px 50px;
+	text-align: center;
+}
+.but-user div{
+	display: inline-block;
+	padding:0px 0px;
+	display:relative;
+}
+.but-user button{
+	border: 2px; 
+	cursor: pointer;
+
+}
+.but-user div button#login{
+	border:none;
+	border:2px solid white;
+	padding: 10px 25px !important;
+	color:white;
+	background: #25aaa0;
+	outline: none;
+
+	
+
+}
+.but-user div button#register{
+	border:none;
+	border:2px solid white;
+	padding: 10px 25px !important;
+	color:white;
+	background: #3b5998;
+	outline: none;
+
+
+}
+.but-user div button:hover{
+	color: white;
+}
+.name{
+	outline: none;
+	border:2px solid lightgray;
+	border-bottom: none;
+	
+}
+
+.login-form {
+	text-align: center;
+}
+.login-form form input[type=text] , .login-form form input[type=email]{
+	background:rgba(255, 255, 255,0.8);
+	width:65%;
+	padding:5px 5px;
+	margin:18px;
+	font-size: 18px;
+	border:none;
+	border-left:1px solid blue;
+	border-bottom:2px solid gray;
+	/*border-bottom: 3px solid blue;*/
+}
+.login-form form input[type=password]{
+	background:rgba(255, 255, 255,0.8);
+	width:65%;
+	padding:5px 5px;
+	margin:18px;
+	font-size: 18px;
+	border:none;
+	border-left:1px solid red;
+	border-bottom:2px solid gray;
+	/*border-bottom: 3px solid red;*/
+}
+.login-form form input[type=submit]{
+	
+	width:50%;
+	padding:5px 5px;
+	margin:18px;
+	font-size: 18px;
+	border:none;
+	background: rgba(51, 51, 51,0.8);
+	color:white;
+	border-bottom: 3px solid #3aa097;
+}
+
+.regi{
+
+}
+.regi p{
+	margin:10px 5px 0px;
+	font-size: 16px;
+}
+.regi button{
+
+	display: block;
+	border:none;
+	cursor: pointer;
+	background:rgba(255, 255, 255,0.0);
+	color:DodgerBlue;
+	margin:auto;
+}
+
+/*submit*/
+.signin-form {
+	text-align: center;
+	display:none;
+
+}
+
+.signin-form form input[type=text]{
+	background:rgba(255, 255, 255,0.8);
+	width:65%;
+	padding:5px 5px;
+	margin:15px;
+	font-size: 18px;
+	border:none;
+	border-left:1px solid blue;
+	border-bottom:2px solid gray;
+	
+	/*border-bottom: 3px solid blue;*/
+}
+.signin-form form input[type=date]{
+	background:rgba(255, 255, 255,0.8);
+	width:65%;
+	padding:5px 5px;
+	margin:15px;
+	font-size: 18px;
+	border:none;
+	border-left:1px solid orange;
+	border-bottom:2px solid gray;
+	/*border-bottom: 3px solid orange;*/
+}
+
+.signin-form form input[type=email]{
+	background:rgba(255, 255, 255,0.8);
+	width:65%;
+	padding:5px 5px;
+	margin:15px;
+	border:none;
+	border-left:1px solid green;
+	border-bottom:2px solid gray;
+	/*border-bottom: 3px solid green;*/
+}
+.signin-form form input[type=password]{
+	background:rgba(255, 255, 255,0.8);
+	width:65%;
+	padding:5px 5px;
+	margin:15px;
+	/*font-size: 18px;*/
+	border:none;
+	border-left:1px solid red;
+	border-bottom:2px solid gray;
+	/*border-bottom: 3px solid red;*/
+}
+.signin-form form input[type=submit]{
+	width:50%;
+	padding:5px 5px;
+	margin:15px;
+	font-size: 18px;
+	border:none;
+	background: rgba(51, 51, 51,0.8);
+	color:white;
+	border-bottom: 3px solid #3dcabd;
+}
+
+@media (max-width: 992px) { 
+	.login-form form input[type=text]{
+		width:80%;
+	}
+	.login-form form input[type=password]{
+		width:80%;
+	}
+	.signin-form form input[type=text]{
+		width:80%;
+	}
+	.signin-form form input[type=email]{
+		width:80%;
+	}
+	.signin-form form input[type=date]{
+		width:80%;
+	}
+	.signin-form form input[type=password]{
+		width:80%;
+	}
+
+ }
+
+ @media (max-width: 576px) {
+ 	.login-form form input[type=text]{
+		width:80%;
+	}
+	.login-form form input[type=password]{
+		width:80%;
+	}
+	.signin-form form input[type=text]{
+		width:80%;
+	}
+	.signin-form form input[type=email]{
+		width:80%;
+	}
+	.signin-form form input[type=date]{
+		width:80%;
+	}
+	.signin-form form input[type=password]{
+		width:80%;
+	}
+ }

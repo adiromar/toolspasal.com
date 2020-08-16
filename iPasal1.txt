@@ -1,0 +1,265 @@
+public class ReviewDTO {
+
+	private int reviewId;
+	private String reviewTitle;
+	private String reviewDesc;
+	private String pros;
+	private String cons;
+	private float rating;
+	private String reviewDate;
+	private int userId;
+	private int productId;
+	private String productName;
+	private UserDTO userDto;
+	private String status;
+	private boolean verified;
+}
+
+
+public class ImageDTO {
+    private int imageId;
+    private String image;
+}
+
+public class WishListDTO {
+    private int id;
+    private int userId;
+    private int productId;
+    private boolean deleted;
+}
+
+public class CategoryDTO {
+    private int categoryId;
+    private String categoryName;
+    private int parentId;
+    private CategoryImageDTO image;
+    private boolean featured;
+    private boolean offered;
+    private List<CategoryDTO> childCategories;
+
+}
+
+
+
+
+public class ProductDTO implements Comparable{
+
+    private int productId; // id
+    private String productName;// title
+    private String unit;
+    private float rate; // Price
+    private int categoryId;
+    private String categoryName;
+    private int availableItems; //
+    private int parentId; 
+    private List<ImageDTO> images; //
+    private String shortDesc; // detail
+    private String highlights;
+    private String description; // specification
+    private String entryDate; //
+    private int quantity;
+    private boolean featured; //
+    private int userId; // user_id
+    private int relatedProducts[];
+    private List<ProductDTO> relatedProductDtos;
+    private boolean newProduct;
+    private float discountPercent; // discount
+    private float actualRate; // price
+    private int merchantId[];
+    private List<MerchantDTO> merchant;
+    private List<ReviewDTO> reviewDtos;
+    private int nosReview;
+    private float avgRating;
+    private List<CategoryDTO> ancestorCategories;
+    private int totalSoldQuantity;
+    private String productTags[];
+
+}
+
+
+
+
+public class SliderDTO {
+    private int sliderId;
+    private String textMain;
+    private String textSecondary;
+    private SliderImageDTO sliderImage;
+    private Integer categoryId;
+    private String categoryName;
+    private boolean showSlider;
+
+}
+
+{
+    "data": [{
+        "productId": 30,
+        "productName": "Iphone 6s",
+        "unit": "pcs",
+        "rate": 45000.0,
+        "categoryId": 21,
+        "categoryName": "Apple",
+        "availableItems": 5,
+        "parentId": 11,
+        "images": [{
+            "imageId": 36,
+            "image": "http://103.233.58.121:8080/Pictures/412jWjEIzKL2019Oct24120253.jpg"
+        }],
+        "shortDesc": "versatile",
+        "highlights": "delligent",
+        "description": "accurate",
+        "entryDate": "2019-10-24",
+        "quantity": 0,
+        "featured": false,
+        "userId": 1,
+        "relatedProducts": [
+            1,
+            16
+        ],
+        "relatedProductDtos": [{
+                "productId": 1,
+                "productName": "Samsung Galaxy Note 9 ",
+                "unit": "pcs",
+                "rate": 100700.0,
+                "categoryId": 15,
+                "categoryName": "Samsung",
+                "availableItems": 14,
+                "parentId": 11,
+                "images": [{
+                    "imageId": 1,
+                    "image": "http://103.233.58.121:8080/Pictures/thumb/samsung_galaxy_note9.jpg"
+                }],
+                "shortDesc": "(Dual-SIM) 128GB Smartphone (Midnight Black) with Samsung Rugged Military Grade ",
+                "highlights": "Specifications of Samsung Galaxy Note 9 SM-N960F/DS (Dual-SIM) 128GB Smartphone (Midnight Black) with Samsung Rugged Military Grade Protective Cover with Kickstand (Black)\n",
+                "description": "Product details of Samsung Galaxy Note 9 SM-N960F/DS (Dual-SIM) 128GB Smartphone (Midnight Black) with Samsung Rugged Military Grade Protective Cover with Kickstand (Black)\n\n",
+                "entryDate": "2019-08-06",
+                "quantity": 0,
+                "featured": false,
+                "userId": 1,
+                "relatedProducts": null,
+                "relatedProductDtos": null,
+                "newProduct": false,
+                "discountPercent": 5.0,
+                "actualRate": 106000.0,
+                "merchantId": null,
+                "merchant": null,
+                "reviewDtos": null,
+                "nosReview": 0,
+                "avgRating": 0.0,
+                "ancestorCategories": null,
+                "totalSoldQuantity": 0,
+                "productTags": null
+            },
+            {
+                "productId": 16,
+                "productName": "iPad 10.2",
+                "unit": "pcs",
+                "rate": 95000.0,
+                "categoryId": 45,
+                "categoryName": "Ipads",
+                "availableItems": 10,
+                "parentId": 21,
+                "images": [{
+                    "imageId": 28,
+                    "image": "http://103.233.58.121:8080/Pictures/thumb/ipad2019Sep12105651.jfif"
+                }],
+                "shortDesc": "Use multiple apps at once",
+                "highlights": "The newest in the iPad range",
+                "description": "The new iPad combines the power and capability of a computer with the ease of use and versatility you’d never expect from one. And now it’s even more versatile, with a larger 10.2?inch Retina display, support for the full-size Smart Keyboard, and the amazing new capabilities of iPadOS. It’s unbelievably fun. And unmistakably iPad.",
+                "entryDate": "2019-09-12",
+                "quantity": 0,
+                "featured": false,
+                "userId": 1,
+                "relatedProducts": null,
+                "relatedProductDtos": null,
+                "newProduct": false,
+                "discountPercent": 0.0,
+                "actualRate": 95000.0,
+                "merchantId": null,
+                "merchant": null,
+                "reviewDtos": null,
+                "nosReview": 0,
+                "avgRating": 0.0,
+                "ancestorCategories": null,
+                "totalSoldQuantity": 0,
+                "productTags": null
+            }
+        ],
+        "newProduct": false,
+        "discountPercent": 10.0,
+        "actualRate": 50000.0,
+        "merchantId": [
+            0
+        ],
+        "merchant": [
+            null
+        ],
+        "reviewDtos": [{
+            "reviewId": 2,
+            "reviewTitle": "Expensive",
+            "reviewDesc": "Very Expensive for such old product",
+            "pros": "old model",
+            "cons": "old model",
+            "rating": 1.0,
+            "reviewDate": "2019-12-25 11:25:00.0",
+            "userId": 1,
+            "productId": 30,
+            "productName": null,
+            "userDto": {
+                "userId": 1,
+                "username": "yoomes",
+                "fName": "Umesh",
+                "mName": "Bahadur",
+                "lName": "Bhujel",
+                "email": "yoomesbhujel@gmail.com",
+                "phone": 9849931288,
+                "parentId": 0,
+                "authority": null,
+                "roleId": 1,
+                "token": null,
+                "city": "kathmandu",
+                "street": "dhalpa 11, kritipur",
+                "enabled": true,
+                "authorities": null
+            },
+            "status": null,
+            "verified": false
+        }],
+        "nosReview": 1,
+        "avgRating": 1.0,
+        "ancestorCategories": [{
+                "categoryId": 21,
+                "categoryName": "Apple",
+                "parentId": 11,
+                "image": null,
+                "featured": false,
+                "offered": false,
+                "childCategories": []
+            },
+            {
+                "categoryId": 11,
+                "categoryName": "Mobiles",
+                "parentId": 1,
+                "image": null,
+                "featured": false,
+                "offered": false,
+                "childCategories": []
+            },
+            {
+                "categoryId": 1,
+                "categoryName": "Electronic Devices",
+                "parentId": 0,
+                "image": null,
+                "featured": false,
+                "offered": false,
+                "childCategories": []
+            }
+        ],
+        "totalSoldQuantity": 0,
+        "productTags": []
+    }],
+    "currentNo": 0,
+    "startNo": 0,
+    "endNo": 0,
+    "status": 200,
+    "message": "OK"
+}
