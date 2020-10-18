@@ -16,7 +16,7 @@
 				<div class="bread-inner">
 					<ul class="bread-list">
 						<li><a href="{{ url('/') }}">Home<i class="ti-arrow-right"></i></a></li>
-						<li class="active"><a href="{{ url('theme2/show-cart') }}">Cart</a></li>
+						<li class="active"><a href="{{ url('theme2/show-cart') }}">{{ $title }}</a></li>
 					</ul>
 				</div>
 			</div>
@@ -34,10 +34,11 @@
 					<table class="table shopping-summery">
 						<thead>
 							<tr class="main-hading">
-								<th>PRODUCT</th>
-								<th>NAME</th>
-								<!-- <th class="text-center">UNIT PRICE</th> -->
-								<!-- <th class="text-center">QUANTITY</th> -->
+								<th class="">PRODUCT IMAGE</th>
+								<th class="float-left">PRODUCT NAME</th>
+								<th class="text-center">Rate</th>
+								
+								<th class="text-center">QUANTITY</th>
 								<th class="text-center">TOTAL</th> 
 								<th class="text-center"><i class="ti-trash remove-icon"></i></th>
 							</tr>
@@ -46,29 +47,24 @@
 						@foreach (Cart::content() as $item)
 							<tr>
 								<td class="image" data-title="PRODUCT"><img src="{{asset('uploads/products/thumbnails/'.$item->model->featuredImage)}}" alt="#"></td>
-								<td class="product-des" data-title="Description">
+								<td class="product-des" data-title="Description" style="padding: unset !important;">
 									<p class="product-name"><a href="{{ route('view.product.new2', $item->model->slug) }}">{{ $item->model->productName }}</a></p>
 									<p class="product-des">{{ $item->model->categoryName }}</p>
 								</td>
-								<!-- <td class="price" data-title="Price"><span>{{ $item->model->rate }}</span></td> -->
-								<!-- Input Order 
-								<td class="qty" data-title="Qty">
-									<div class="input-group">
-										<div class="button minus">
-											<button type="button" class="btn btn-primary btn-number" disabled="disabled" data-type="minus" data-field="quant[1]">
-												<i class="ti-minus"></i>
-											</button>
-										</div>
-										<input type="text" name="quant[1]" class="input-number"  data-min="1" data-max="100" value="1">
-										<div class="button plus">
-											<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
-												<i class="ti-plus"></i>
-											</button>
-										</div>
-									</div>
-								End Input Order -->
+								<td class="price" data-title="Price"><span>{{ $item->model->rate }}</span></td> 
+								<td>
+									<form action="{{ route('cart.update', $item->rowId) }}" method="post" class="submit-form">
+										{{csrf_field()}}
+										{{ method_field('PUT') }}
+										<select name="item_count" class="form-control" style="">
+											<?php for ($i=1; $i <= 10; $i++) { ?>
+												<option value="{{$i}}" {{ $item->qty == $i ? 'selected' : '' }}>{{$i}}</option>
+											<?php } ?>
+										</select>
+										<noscript><input type="submit" name="submit"></noscript>
+									</form>
 								</td>
-								<td class="total-amount" data-title="Total"><span>{{ $item->model->rate }}</span></td>
+								<td class="total-amount" data-title="Total"><span>{{ $item->model->rate * $item->qty }}</span></td>
 								<td class="action" data-title="Remove"><a href="#" onclick="event.preventDefault();document.getElementById('remove-item-{{$item->rowId}}').submit();"><i class="ti-trash remove-icon"></i></a>
 									<form id="remove-item-{{$item->rowId}}" action="{{ route('cart.destroy', $item->rowId) }}" method="post">
 									{{csrf_field()}}

@@ -1,5 +1,5 @@
 <!-- Start Shop Home List  -->
-	<section class="shop-home-list section">
+	<section class="shop-home-list section" style="background: #f2f2f2;">
 		<div class="container">
 			<div class="row">
 			@if( $products = App\Product::productSales(6) )
@@ -27,6 +27,11 @@
 										<div class="content">
 											<h4 class="title"><a href="{{ route('view.product.new2', $product->slug) }}">{{ $product->productName }}</a></h4>
 											<p class="price with-discount">NRs. {{ $product->rate }}</p>
+
+											@if($product->actualRate - $product->rate > 0)
+												<del class="del-price">NRs. {{ $product->actualRate }}</del>
+											@else
+											@endif
 										</div>
 									</div>
 								</div>
@@ -60,6 +65,9 @@
 								<div class="content">
 									<h5 class="title"><a href="{{ route('view.product.new2', $product->slug) }}">{{ $product->productName }}</a></h5>
 									<p class="price with-discount">NRs. {{ $product->rate }}</p>
+									@if($product->actualRate - $product->rate > 0)
+										<del class="del-price">NRs. {{ $product->rate }}</del>
+									@endif
 								</div>
 							</div>
 						</div>

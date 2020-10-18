@@ -55,7 +55,7 @@ Route::post('/view_single_order', 'Theme2\FrontController@view_single_order')->n
 	Route::get('products/more', 'Theme2\FrontController@get_all_products_more')->name('products.more');
 	Route::get('brands/products/{id}', 'Theme2\FrontController@get_all_products_brands')->name('products.brands');
 
-	Route::get('user/orders/{id}', 'Theme2\FrontController@user_orders')->name('user.orders');
+	Route::get('user/orders/{id}', 'Theme2\FrontController@user_orders')->middleware(['auth'])->name('user.orders');
 // });
 
 // Route::get('/', 'FrontController@index_new');

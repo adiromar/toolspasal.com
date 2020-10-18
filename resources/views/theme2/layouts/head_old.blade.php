@@ -21,7 +21,7 @@
 						<div class="top-left">
 							<ul class="list-main">
 								<li><i class="ti-headphone-alt"></i> + Phone No</li>
-								<li><i class="ti-email"></i> support@shophub.com</li>
+								<li><i class="ti-email"></i> support@shophub.comrr</li>
 							</ul>
 						</div>
 						<!--/ End Top Left -->
@@ -61,7 +61,7 @@
 					<div class="col-lg-2 col-md-2 col-12">
 						<!-- Logo -->
 						<div class="logo">
-							<a href="{{ url('theme2') }}"><img src="{{ asset('themes/2/images/logo.png') }}" alt="logo"></a>
+							<a href="{{ url('/') }}"><img src="{{ asset('themes/2/images/tools_web.png') }}" alt="logo"></a>
 						</div>
 						<!--/ End Logo -->
 						<!-- Search Form -->
@@ -85,7 +85,7 @@
 							<div class="search-bar-wrapper">
 								<form action="{{ route('search.product2') }}" method="post">
 									{{ csrf_field() }}
-									<input name="search" placeholder="Search Products Here....." type="text">
+									<input name="search" placeholder="Search Products Here.....w" type="text">
 									<button class="btnn"><i class="ti-search"></i></button>
 								</form>
 							</div>
@@ -100,7 +100,8 @@
 							</div>
 							@endauth
 							<div class="sinlge-bar shopping">
-								<a href="#" class="single-icon"><i class="ti-bag"></i> <span class="total-count">{{ Cart::instance('default')->count() }}</span></a>
+								@if(Auth::user())
+								<a href="" class="single-icon"><i class="ti-bag"></i> <span class="total-count">{{ Cart::instance('default')->count() }}</span></a>
 								<!-- Shopping Item -->
 								<div class="shopping-item">
 									<div class="dropdown-cart-header">
@@ -108,6 +109,9 @@
 										<a href="{{ route('cart.view2') }}">View Cart</a>
 									</div>
 								</div>
+								@else
+								<a href="" class="single-icon"><i class="ti-bag"></i> <span class="total-count">{{ Cart::instance('default')->count() }}</span></a>
+								@endif
 								<!--/ End Shopping Item -->
 							</div>
 						</div>
@@ -120,7 +124,26 @@
 			<div class="container">
 				<div class="cat-nav-head">
 					<div class="row">
-						<div class="col-lg-12 col-12">
+						<div class="col-lg-3">
+							<div class="all-category">
+								<h3 class="cat-heading"><i class="fa fa-bars" aria-hidden="true"></i>CATEGORIES</h3>
+								<ul class="main-category" style="">
+									@foreach( App\Category::orderBy('name')->where('parentId', 0)->get() as $category )
+									<li>
+										<a href="{{ route('category.product.new2', $category->slug) }}">{{ $category->name }} <i class="fa fa-angle-right" aria-hidden="true"></i></a>
+										@if( $category->children() )
+										<ul class="sub-category">
+										@foreach( $category->children() as $child)
+											<li><a href="{{ route('category.product.new2', $child->slug) }}">{{ $child->name }}</a></li>
+										@endforeach
+										</ul>
+										@endif
+									</li>
+									@endforeach
+								</ul>
+							</div>
+						</div>
+						<div class="col-lg-9 col-12">
 							<div class="menu-area">
 								<!-- Main Menu -->
 								<nav class="navbar navbar-expand-lg">
@@ -128,7 +151,7 @@
 										<div class="nav-inner">	
 											<ul class="nav main-menu menu navbar-nav">
 												<li class="active"><a href="{{ url('/') }}">Home</a></li>
-												<li><a href="{{ url('show-cart') }}">Show Cart</a></li>
+												<li><a href="{{ url('show-cart') }}">Cart</a></li>
 												<li><a href="{{ url('privacy-policy') }}">Privacy Policy</a></li>
 												<li><a href="#">About Us</a></li>									
 												<li><a href="{{ url('contact-us') }}">Contact Us</a></li>

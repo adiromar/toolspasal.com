@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Brand;
 use Session;
+use Image;
 
 class BrandController extends Controller
 {
@@ -40,7 +41,8 @@ class BrandController extends Controller
     {
     $this->validateWith([
             'name' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            'image' => 'image|required'
     ]);
 
     $brand = new Brand;
@@ -49,6 +51,16 @@ class BrandController extends Controller
     $brand->slug = str_slug($request->name);
     $brand->status = $request->status;
 
+    $fileurl = '';
+        if ( $featured = $request->file('image') ) {
+            $filename = 'featured-' . str_slug( $request->name ) . '-' . str_random(10) . '.' . $featured->getClientOriginalExtension();
+
+            Image::make($featured)->resize(250,270)->save('uploads/brands/'. $filename);
+
+            $fileurl = 'uploads/brands/' . $filename; 
+        }
+
+    $brand->image = $fileurl;
     // $cat->theme_no = $request->theme_no;
     $brand->save();
 
@@ -88,20 +100,47 @@ class BrandController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Brand $brand)
     {
         $this->validateWith([
             'name' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            'image' => 'image|required'
         ]);
 
-        $brand = Brand::where('brandId', $id)
-                        ->update(['brandName'=> $request->name, 'slug' => str_slug($request->name), 'status'=> $request->status]);
+        // $brand = Brand::where('brandId', $id)
+        //                 ->update(['brandName'=> $request->name, 'slug' => str_slug($request->name), 'status'=> $request->status]);
 
-        $brands = Brand::latest()->get();
+        // $brands = Brand::latest()->get();
+        
+        $fileurl = $brand->image;
+        if ( $featured = $request->file('image') ) {
+            $filename = 'featured-' . str_slug( $request->name ) . '-' . str_random(10) . '.' . $featured->getClientOriginalExtension();
+
+            try {
+                if ( file_exists($brand->image) ) {
+                    unlink( $brand->image );
+                }    
+            } catch (Exception $e) {
+                
+            }
+            Image::make($featured)->resize(250,270)->save('uploads/brands/'. $filename);
+
+            $fileurl = 'uploads/brands/' . $filename; 
+        }
+
+
+        $brand->brandName = $request->name;
+        $brand->slug = str_slug($request->name);
+        $brand->image = $fileurl;
+        $brand->status = $request->status;
+        // $category->theme_no = $request->theme_no;
+        $brand->save();
+
 
         Session::flash('success', 'Succesfully Updated a Brand.');
-        return view('brands.index')->with('brands', $brands);
+        return redirect()->back();
+        // return view('brands.index')->with('brands', $brands);
     }
 
     /**

@@ -61,7 +61,7 @@ class SlidersController extends Controller
             'sliderImage' => 'required|image'
         ]);
 
-        $categoryname = Category::find($request->category);
+        // $categoryname = Category::find($request->category);
         // $categoryname = $categoryname->name; 
 
         $file = $request->file('sliderImage');
@@ -77,9 +77,9 @@ class SlidersController extends Controller
         $slider->textMain = $request->textMain;
         $slider->textSecondary = $request->textSecondary;
         $slider->sliderImage = $filename;
-        $slider->categoryId = $request->category;
-        $slider->categoryName = $categoryname;
-        $slider->sliderTheme = $request->slider_theme;
+        // $slider->categoryId = $request->category;
+        // $slider->categoryName = $categoryname;
+        // $slider->sliderTheme = $request->slider_theme;
         $slider->productId = $request->product_id;
         $slider->showSlider = 1;
 
@@ -123,14 +123,14 @@ class SlidersController extends Controller
         // dd($request);
         $this->validateWith([
             'textMain' => 'required',
-            'category' => 'required',
+            // 'category' => 'required',
             'sliderImage' => 'image'
         ]);
 
         $slider = Sliders::findOrFail($id);
 
-        $categoryname = Category::find($request->category);
-        $categoryname = $categoryname->name; 
+        // $categoryname = Category::find($request->category);
+        // $categoryname = $categoryname->name; 
 
         $file = $request->file('sliderImage');
         $filename = $slider->sliderImage;
@@ -150,8 +150,8 @@ class SlidersController extends Controller
         $slider->textMain = $request->textMain;
         $slider->textSecondary = $request->textSecondary;
         $slider->sliderImage = $filename;
-        $slider->categoryId = $request->category;
-        $slider->categoryName = $categoryname;
+        // $slider->categoryId = $request->category;
+        // $slider->categoryName = $categoryname;
         $slider->showSlider = $request->showSlider;
         $slider->sliderTheme = $request->slider_theme;
 

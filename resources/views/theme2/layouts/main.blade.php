@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 	<!-- Title Tag  -->
-    <title>Eshop - eCommerce HTML5 Template.</title>
+    <title>Toolspasal.com - Online Store.</title>
 	<!-- Favicon -->
 	<link rel="icon" type="image/png" href="{{ asset('themes/2/images/favicon.png') }}">
 	<!-- Web Font -->
@@ -88,11 +88,19 @@
 
 	@yield('sliders')
 
-	@yield('productssection')	
-
-	@yield('categorysection')
 	
+
+	{{-- @yield('categorysection') --}}
+	
+	
+
+	
+
+	@yield('all')
+
 	@yield('popularsection')
+
+	@yield('productssection')	
 
 	@yield('threecolumns')
 
@@ -114,8 +122,15 @@
 							<div class="logo">
 								<a href="{{ url('theme2') }}"><img src="{{ asset('themes/2/images/logo2.png') }}" alt="#"></a>
 							</div>
-							<p class="text">About Section</p>
-							<p class="call">Got Question? Call us 24/7<span><a href="tel:123456789">+ Phone No.</a></span></p>
+							<p class="text"><i class="fa fa-map-marker"></i> Sundhara, Taha Galli </p>
+							<p class="call">Got Question? Call us 24/7
+								<span>
+									<a href="tel:9860104285"><i class="fa fa-mobile"></i> 9860104285 </a>
+								</span>
+								<span>
+									<a href="tel:9851107305"><i class="fa fa-mobile"></i> 9851107305 </a>
+								</span>
+							</p>
 						</div>
 						<!-- End Single Widget -->
 					</div>
@@ -125,8 +140,8 @@
 							<h4>Information</h4>
 							<ul>
 								<li><a href="#">About Us</a></li>
-								<li><a href="{{ url('theme2/privacy-policy') }}">Privacy Policy</a></li>
-								<li><a href="{{ url('theme2/contact-us') }}">Contact Us</a></li>
+								<li><a href="{{ url('/privacy-policy') }}">Privacy Policy</a></li>
+								<li><a href="{{ url('/contact-us') }}">Contact Us</a></li>
 							</ul>
 						</div>
 						<!-- End Single Widget -->
@@ -437,6 +452,13 @@
 					img.src = objectUrl;
 				}
 			});
+
+			$('.submit-form').change(function(e){
+                e.preventDefault();
+                // alert("hello");
+		        $(this).submit();
+	        });
+			
 
 		});
 	</script>

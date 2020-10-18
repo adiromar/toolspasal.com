@@ -2,7 +2,7 @@
 
 @section('menu')
 
-	@include('theme2.layouts.headmenu')
+	@include('theme2.layouts.head')
 
 @endsection
 

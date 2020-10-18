@@ -165,6 +165,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::find($id);
+        $brands = Brand::latest()->get();
         if(Auth::user()->hasRoles('admin')){
             $categories = Category::orderBy('name')->get();
         }else{
@@ -174,7 +175,7 @@ class ProductController extends Controller
         }
         
         $tags = Tags::orderBy('name')->get();
-        return view('products.edit', compact('product', 'categories', 'tags'));
+        return view('products.edit', compact('product', 'categories', 'tags','brands'));
     }
 
     /**

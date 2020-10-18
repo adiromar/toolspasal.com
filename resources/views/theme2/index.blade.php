@@ -41,3 +41,9 @@
 	@include('theme2.layouts.services')
 
 @endsection
+
+@section('all')
+
+	@include('theme2.layouts.all')
+
+@endsection

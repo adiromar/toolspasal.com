@@ -109,11 +109,19 @@
                                 </select>
                             </div>
 
-                            {{-- Edited for adding theme wise data --}}
-                            <div class="col-md-4 chk-box">
-                            
-                            <input type="hidden" name="theme_no[]" value="2">
-                            
+                            <div class="col-md-4">
+                                <label>Brands</label>
+                                <select name="brand_id" id="" class="form-control">
+                                    <option value="">--Select--</option>
+                                    @if( count($brands) )
+                                    @foreach ( $brands as $brand )
+                                        <option value="{{ $brand->brandId }}">{{ $brand->brandName }}</option>
+                                    @endforeach
+
+                                    @else
+                                        <option value="">--</option>
+                                    @endif
+                                </select>
                             </div>
 
 
@@ -141,7 +149,7 @@
                     <div class="form-group">
                         <label for="">Tags (optional):</label>
                         <select class="js-example-basic-multiple form-control" name="tags[]" multiple="multiple">
-                        @if( count($tags) )
+                        @if( $tags )
 
                         @foreach( $tags as $tag )
                             <option value="{{ $tag->id }}">{{ $tag->name }}</option>
@@ -269,11 +277,19 @@
                                 </select>
                             </div>
 
-                            {{-- Edited for adding theme wise data --}}
-                            <div class="col-md-4 chk-box">
-                                
-                            <input type="hidden" name="theme_no[]" value="2">
-                            
+                            <div class="col-md-4">
+                                <label>Brands</label>
+                                <select name="brand_id" id="" class="form-control">
+                                    <option value="">--Select--</option>
+                                    @if( count($brands) )
+                                    @foreach ( $brands as $brand )
+                                        <option value="{{ $brand->brandId }}">{{ $brand->brandName }}</option>
+                                    @endforeach
+
+                                    @else
+                                        <option value="">--</option>
+                                    @endif
+                                </select>
                             </div>
 
 
@@ -301,7 +317,7 @@
                     <div class="form-group">
                         <label for="">Tags (optional):</label>
                         <select class="js-example-basic-multiple form-control" name="tags[]" multiple="multiple">
-                        @if( count($tags) )
+                        @if( $tags )
 
                         @foreach( $tags as $tag )
                             <option value="{{ $tag->id }}">{{ $tag->name }}</option>
@@ -430,11 +446,19 @@
                                 </select>
                             </div>
 
-                            {{-- Edited for adding theme wise data --}}
-                            <div class="col-md-4 chk-box">
-                            
-                            <input type="hidden" name="theme_no[]" value="2">
-                            
+                            <div class="col-md-4">
+                                <label>Brands</label>
+                                <select name="brand_id" id="" class="form-control">
+                                    <option value="">--Select--</option>
+                                    @if( count($brands) )
+                                    @foreach ( $brands as $brand )
+                                        <option value="{{ $brand->brandId }}">{{ $brand->brandName }}</option>
+                                    @endforeach
+
+                                    @else
+                                        <option value="">--</option>
+                                    @endif
+                                </select>
                             </div>
 
 
@@ -499,12 +523,12 @@
 	<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
 	  <div class="modal-content">
 		<div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Add Slider Items in this Section</h5>
-          {{-- <p style="color: red;">* Only Supplier with assigned themes can edit this section.</p> --}}
-		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			<span aria-hidden="true">&times;</span>
-		  </button>
-		</div>
+            <h5 class="modal-title" id="exampleModalLongTitle">Add Slider Items in this Section</h5>
+            {{-- <p style="color: red;">* Only Supplier with assigned themes can edit this section.</p> --}}
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
 		<div class="modal-body">
             <div class="container">
             
@@ -535,10 +559,12 @@
                     <div class="col-md-6 form-group">
                         <div class="row">
                             <div class="col-md-4">
-                                <label>Select Category</label>
-                                <select name="category" class="form-control">
-                                @foreach ( $categories as $category )
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                <label>Select Product</label>
+                                <select name="product_id" class="form-control">
+                                    @php $products = App\Product::latest()->get();
+                                    @endphp
+                                @foreach ( $products as $product )
+                                    <option value="{{ $product->id }}">{{ $product->productName }}</option>
                                 @endforeach
                                 </select>
                             </div>
@@ -546,9 +572,7 @@
                     </div>
 
                     <div class="col-md-12 form-group">
-                        @if(Auth::user()->hasRoles('supplier'))
-                        <input type="hidden" name="slider_theme" value="2">
-                        @endif
+
                         <input type="submit" name="submit" value="Create Slider" class="btn btn-info">    
                     </div>
                 </div>

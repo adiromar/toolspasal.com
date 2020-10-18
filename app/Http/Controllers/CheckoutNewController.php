@@ -43,103 +43,7 @@ class CheckoutNewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    // public function store(Request $request)
-    // {
-    //     // dd($request);die;
-    //     $this->validateWith([
-    //         'username' => 'required',
-    //         'delivery_address' => 'required',
-    //         'user_email' => 'required',
-    //         'number' => 'required',
-    //         'product_id' => 'required'
-    //     ]);
-
-    //     $productids = $request->product_id;
-    //     $supplierids = $request->supplier_id;
-    //     $product_rate = $request->rate;
-
-    //     // generate unique code token
-    //     function generateRandomString($length = 20) {
-    //         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    //         $charactersLength = strlen($characters);
-    //         $randomString = '';
-    //         for ($i = 0; $i < $length; $i++) {
-    //             $randomString .= $characters[rand(0, $charactersLength - 1)];
-    //         }
-    //         return $randomString;
-    //     }
-
-    //     $order_new = OrderNew::insertGetId([
-    //         'clientName' => $request->full_name,
-    //         'client_username' => $request->username,
-    //         'userEmail' => $request->user_email,
-    //         'shippingAddress' => $request->delivery_address,
-    //         'phone' => $request->number,
-    //         'state' => $request->ship_state,
-    //         'city' => $request->ship_city,
-    //         'zipcode' => $request->post_code,
-    //         'paymentType' => 'Cash On Delivery',
-    //         'paymentStatus' => 0,
-    //         'unique_order_identifier' => generateRandomString(6),
-    //         'order_date' => date("Y-m-d"),
-    //     ]);
-
-    //     $pro_rate = array_combine($productids,$product_rate);
-    //     foreach($pro_rate as $pp_key => $pp_val) {
-    //         // order_details
-    //         $orderdetail = OrderDetailNew::insert([
-    //             'orderId' => $order_new,
-    //             'productId' => $pp_key,
-    //             'qty' => 1,
-    //             'rate' => $pp_val,
-    //             ]);
-    //     }
-
-
-    //     $sids = array_unique($request->supplier_id);
-    //     foreach ( $sids as $s ) 
-    //     {
-            
-    //         $user = User::find($s);
-    //         if ($user->profile) {
-    //         session(['uemail' => $user->profile->email]);
-    //         }else{
-    //         session(['uemail' => $user->email]);
-    //         }
-    //         //Start Email
-    //         // try {
-    //         //     Mail::send('emails.orders.shipped', 
-    //         //               [ 
-    //         //                 'user_name' => $user->username, 
-    //         //                 'clientname' => $request->username,
-    //         //               ]
-    //         //               , function ($message)
-    //         //                 {
-
-    //         //                     $message->from('sastoshowroom@gmail.com', 'Aryal Marketing');
-    //         //                     $message->cc('nickarsenal007@gmail.com', $name = null);
-    //         //                     $message->subject('Order Alert! Aryal Marketing');
-    //         //                     $message->to(session()->get('uemail'));
-
-    //         //                 });
-    //         //   } catch (Exception $e) {   }
-    //           sleep('1');
-    //           session()->forget('uemail');
-    //     }
-
-    //     session()->flash('info', 'Thank you for placing your orders. We will contact you soon.');
-    //     return redirect('/order-success');
-    // }
-
-    public function update_payment_status(Request $request){
-        // dd($request);
-        // OrderNew::where('id', $request->order_id )->update([ 'paymentStatus' => $request->payment_Status, 'paymentDate' => date("Y-m-d") ]);
-        
-        DB::table('payment_details')->where('payment_id', $request->order_id )->update([ 'status' => $request->payment_Status, 'payment_date' => date("Y-m-d") ]);
-        
-        session()->flash('info', 'Payment Status Updated');
-        return redirect()->back();
-    }
+ 
     
       public function store(Request $request)
     {
@@ -246,7 +150,19 @@ class CheckoutNewController extends Controller
         
 
         session()->flash('info', 'Thank you for placing your orders. We will contact you soon.');
-        return redirect('/order-success');
+        return redirect()->route('order.success');
+    }
+
+
+
+    public function update_payment_status(Request $request){
+        // dd($request);
+        // OrderNew::where('id', $request->order_id )->update([ 'paymentStatus' => $request->payment_Status, 'paymentDate' => date("Y-m-d") ]);
+        
+        DB::table('payment_details')->where('payment_id', $request->order_id )->update([ 'status' => $request->payment_Status, 'payment_date' => date("Y-m-d") ]);
+        
+        session()->flash('info', 'Payment Status Updated');
+        return redirect()->back();
     }
 
     public function store_khalti(Request $request)
@@ -552,7 +468,7 @@ class CheckoutNewController extends Controller
     public function order_success()
     {
         $title = 'Order Success';
-        return view('theme5.order_success')->with('title', $title);
+        return view('theme2.order_success')->with('title', $title);
     }
 
     /**

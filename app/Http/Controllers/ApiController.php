@@ -16,9 +16,10 @@ use App\Order;
 use App\OrderNew;
 use App\OrderDetail;
 use App\OrderDetailNew;
-use App\Khalti;
+// use App\Khalti;
 use Image;
 use DB;
+
 
 use Validator;
 
@@ -28,9 +29,23 @@ class ApiController extends Controller
         @GET("/api/v1/products/sales")
         Call<Response> getSalesProduct();
     */
-    public function getSalesProduct() {
+    public function getSalesProduct(Request $request) {
+        $last_seen = $request->last_seen;
+        $pageSize = $request->pageSize;
+        $action = $request->action;
 
-        $products = Product::select('id')->where('discountPercent', '>', 0)->where('discountPercent', '!=', NULL)->inRandomOrder()->get()->take(6);
+        if($last_seen == 0){
+            $products = Product::select('id')->where('discountPercent', '>', 0)->where('discountPercent', '!=', NULL)->latest()->get()->take($pageSize);
+        }else{
+            if($action == "first"){
+                $products = Product::select('id')->where('discountPercent', '>', 0)->where('discountPercent', '!=', NULL)->where('id', '<', $last_seen)->latest()->get()->take($pageSize);
+            }elseif($action == "next"){
+                $products = Product::select('id')->where('discountPercent', '>', 0)->where('discountPercent', '!=', NULL)->where('id', '<', $last_seen)->latest()->get()->take($pageSize);
+            }else{
+                $products = Product::select('id')->where('discountPercent', '>', 0)->where('discountPercent', '!=', NULL)->where('id', '<', $last_seen)->latest()->get()->take($pageSize);
+            }
+        }
+        
 
         if ( count($products) ) {
    
@@ -44,26 +59,75 @@ class ApiController extends Controller
         return $this->jsonResponse($products, 404, 'No data');
     }
 
+public function getMostBought(Request $request) {
+        $last_seen = $request->last_seen;
+        $pageSize = $request->pageSize;
+        $action = $request->action;
+
+        // $products = Product::where('totalSoldQuantity', '>',0)->orderBy('totalSoldQuantity', 'DESC')->get()->take(6);
+        
+        if($last_seen == 0){
+            $products = DB::table('order_details')->select('product_id')->groupBy('product_id')->orderBy('product_id', 'desc')->get()->take($pageSize);
+        }else{
+            if($action == "first"){
+                // nothing
+                $products = DB::table('order_details')->select('product_id')->where('product_id', '<', $last_seen)->groupBy('product_id')->orderBy('product_id', 'desc')->get()->take($pageSize);
+            }elseif($action == "next"){
+                $products = DB::table('order_details')->select('product_id')->where('product_id', '<', $last_seen)->groupBy('product_id')->orderBy('product_id', 'desc')->get()->take($pageSize);
+            }else{
+                $products = DB::table('order_details')->select('product_id')->where('product_id', '<', $last_seen)->groupBy('product_id')->orderBy('product_id', 'desc')->get()->take($pageSize);
+            }
+            
+        }
+        
+        if ( count($products) ) {
+   
+            foreach ($products as $product) {
+                $data[] = $this->productDTO($product->product_id);
+            }
+
+            return $this->jsonResponse($data, 200);    
+        }
+
+        return $this->jsonResponse($products, 404, 'No data.');
+    }
+
+    // public function getMostBought() {
+
+    //     $products = Product::orderBy('totalSoldQuantity', 'DESC')->get()->take(6);
+
+    //     if ( count($products) ) {
+   
+    //         foreach ($products as $product) {
+    //             $data[] = $this->productDTO($product->id);
+    //         }
+
+    //         return $this->jsonResponse($data, 200);    
+    //     }
+
+    //     return $this->jsonResponse($products, 404, 'No data');
+    // }
+
     /*
         @POST("/api/v1/users/register")
         Call<Response> registerUser(@Body UserDTO userDTO);
     */
-	public function register(Request $request) {
+    public function register(Request $request) {
 
-		$username = $request->username;
-		$email = $request->email;
+        $username = $request->username;
+        $email = $request->email;
 
-		if ( User::where('username', $username)->count() > 0 ) {
-			
-			return response()->json(['message' => 'Username already taken.']);
+        if ( User::where('username', $username)->count() > 0 ) {
+            
+            return response()->json(['message' => 'Username already taken.']);
 
-		}elseif ( User::where('email', $email)->count() > 0 ) {
-			
-			return response()->json(['message' => 'Email already taken.']);
+        }elseif ( User::where('email', $email)->count() > 0 ) {
+            
+            return response()->json(['message' => 'Email already taken.']);
 
-		}
+        }
 
-		$user = User::create([
+        $user = User::create([
             'username' => $request->username,
             'email' => $request->email,
             'password' => bcrypt($request->password),
@@ -86,7 +150,7 @@ class ApiController extends Controller
 
         if ( $request->roleId == 0 ) {
 
-        	DB::table('role_user')->insert([
+            DB::table('role_user')->insert([
                 'user_id' => $uid,
                 'role_id' => 3,
             ]);
@@ -104,7 +168,7 @@ class ApiController extends Controller
 
         return $this->jsonResponse($data, 200);
 
-	}
+    }
 
     /*
         @GET("api/v1/users/checkDuplicateEmail")
@@ -138,10 +202,10 @@ class ApiController extends Controller
         @GET("/api/v1/category")
         Call<Response> getAllCategories();
     */
-	public function getAllCategories() {
+    public function getAllCategories() {
 
-		$categories = Category::select('id')->latest()->where('parentId', 0)->get();
-		
+        $categories = Category::select('id')->latest()->where('parentId', 0)->get();
+        
         $data = [];
         if ( count($categories) ) {
             $i = 0;
@@ -172,7 +236,7 @@ class ApiController extends Controller
 
         return $this->jsonResponse($data, 404, 'No such data found.');
 
-	}
+    }
 
     /*
         @GET("/api/v1/category/featured")
@@ -377,7 +441,7 @@ class ApiController extends Controller
 
         if ( $cat ) {
             
-            $products = $cat->products()->select('id')->get();
+            $products = $cat->products()->select('id')->latest()->get();
 
             if ( count($products) ) {
             
@@ -401,6 +465,39 @@ class ApiController extends Controller
 
     }
 
+
+    public function getProductsByBrandId($id, Request $request) {
+        $last_seen = $request->last_seen;
+        $pageSize = $request->pageSize;
+        $action = $request->action;
+
+
+        $data = [];
+
+        if($last_seen == 0){
+            $products = Product::select('id')->where('brand_id', $id)->latest()->get()->take($pageSize);
+        }else{
+            if($action == "first"){
+                $products = Product::select('id')->where('brand_id', $id)->latest()->get()->take($pageSize);
+            }elseif($action == "next"){
+                $products = Product::select('id')->where('brand_id', $id)->where('id', '<', $last_seen)->latest()->get()->take($pageSize);
+            }else{
+                $products = Product::select('id')->where('brand_id', $id)->latest()->get()->take($pageSize);
+            }
+        }
+        
+        if ( count($products) ) {
+        
+            foreach ($products as $product) {
+                $data[] = $this->productDTO($product->id);
+            }
+            return $this->jsonResponse($data, 200);
+
+        }else{
+            return $this->jsonResponse($data, 404, 'No data.');
+        }
+    }
+
     /*
         @GET("/api/v1/products/parentCategory/{categoryId}")
         Call<Response> getProductsByParentCategoryId(@Path("categoryId") Integer categoryId,
@@ -408,22 +505,36 @@ class ApiController extends Controller
                                                      @Query("pageSize") Integer size,
                                                      @Query("action") String action);
     */
-    public function getProductsByParentCategoryId($categoryId) {
+    public function getProductsByParentCategoryId($categoryId, Request $request) {
+        $last_seen = $request->last_seen;
+        $pageSize = $request->pageSize;
+        $action = $request->action;
 
         $cat = Category::find($categoryId);
 
         $data = [];
 
         if ( $cat ) {
+            if($last_seen == 0){
+                $products = $cat->products()->select('id')->latest()->get()->take($pageSize);
+            }else{
+                if($action == 'first'){
+                    $products = $cat->products()->select('id')->latest()->where('id', '<', $last_seen)->get()->take($pageSize);
+                }elseif($action == 'next'){
+                    $products = $cat->products()->select('id')->latest()->where('id', '<', $last_seen)->get()->take($pageSize);
+                }else{
+                    $products = $cat->products()->select('id')->latest()->where('id', '<', $last_seen)->get()->take($pageSize);
+                }
+                
+            }
             
-            $products = $cat->products()->select('id')->get();
 
             if ( count($products) ) {
-            
+                
                 foreach ($products as $product) {
                     $data[] = $this->productDTO($product->id);
                 }
-
+                // $data['last_seen'] = $product->id;
                 return $this->jsonResponse($data, 200);
 
             }else{
@@ -474,7 +585,7 @@ class ApiController extends Controller
    }
 
     /*
-   		@GET("/api/v1/review/reviewProduct/{productId}")
+        @GET("/api/v1/review/reviewProduct/{productId}")
         Call<Response> getReviewByProductId(@Path("productId") Integer productId,
                                              @Query("last_seen") Integer lastSeenId,
                                              @Query("pageSize") Integer size,
@@ -482,34 +593,38 @@ class ApiController extends Controller
     */
     public function getReviewByProductId($productId)
     {
-    	$product = Product::find($productId);
+        $product = Product::find($productId);
 
-    	$data = [];
-    	if ( $product ) {
-    		
+        $data = [];
+        if ( $product ) {
+            
             if ( count($product->reviews) ) {
                 foreach ($product->reviews()->select('id')->latest()->get() as $review) {
                     $data[] = $this->reviewsDto($review->id);
                 }
             }
-            
-    		return $this->jsonResponse($data, 404, 'No data.');
-    	}
+            // return $this->jsonResponse($data, 404, 'No data.');
+        }
+        if($data){
+            return $this->jsonResponse($data, 200, 'Success');
+        }else{
+            return $this->jsonResponse($data, 200, 'No data');
+        }
 
-    	return $this->jsonResponse($data, 404, 'No data.');
+        
 
     }
 
     /*
-    	@GET("/api/v1/review/{userId}/user")
+        @GET("/api/v1/review/{userId}/user")
         Call<Response> getAllReviews(@Header("Authorization") String token,
                                      @Path("userId") int userId);
     */
     public function getAllReviews($userId) {
 
-    	$user = User::find($userId);
+        $user = User::find($userId);
 
-    	$selections = ['id as reviewId', 'reviewTitle', 'reviewDesc', 'pros', 'cons', 'rating', 'created_at as reviewDate', 'userId', 'productId', 'productName', 'status', 'verified'];
+        $selections = ['id as reviewId', 'reviewTitle', 'reviewDesc', 'pros', 'cons', 'rating', 'created_at as reviewDate', 'userId', 'productId', 'productName', 'status', 'verified'];
 
         $data = [];
         if ( count( $user->reviews ) ) {
@@ -658,7 +773,7 @@ class ApiController extends Controller
         return $wishlist;
     }
 
-    public function productDTO($productId)
+    public function productDTO($productId, $qty = '')
     {
 
         $selections = ['id', 'productName', 'unit', 'rate', 'categoryId', 'categoryName', 'availableItems', 'parentId', 'featuredImage', 'shortDesc', 'highlights', 'description', 'entryDate', 'quantity', 'featured', 'user_id as userId', 'newProduct', 'merchantId', 'discountPercent', 'actualRate', 'created_at'];
@@ -697,9 +812,102 @@ class ApiController extends Controller
         $data['highlights'] = $product->highlights;
         $data['description'] = $product->description;
         $data['entryDate'] = $product->created_at->format('Y-m-d H:g:s');
+
+        // updated
         $data['quantity'] = $product->quantity;
+
         $data['featured'] = $product->featured ? true : false;
         $data['userId'] = $product->userId;
+
+        $data['newProduct'] = $product->newProduct ? true : false;
+        $data['discountPercent'] = (float) $product->discountPercent;
+        $data['actualRate'] = $product->actualRate;
+        $data['merchantId'] = (int) $product->merchantId;
+        $data['merchant'] = [];
+
+        //Get reviews
+        $reviews = [];
+        if ( count($product->reviews) ) {
+            
+            foreach ($product->reviews()->select('id')->get() as $review) {
+                $data['reviewDtos'][] = $this->reviewsDto($review->id);
+            }
+
+        }else{
+            $data['reviewDtos'] = [];    
+        }
+
+        //No of reviews
+        $data['nosReview'] = $product->reviews()->count();
+
+        // avgRating
+        $avgRating = $product->reviews()->avg('rating');
+        $data['avgRating'] = $avgRating ? $avgRating : 0;
+
+        // ancestorCategories 
+        $ancestorCategories = Category::find($product->categoryId);
+        // First current category
+        $data['ancestorCategories'][] = $this->categoryDTO($product->categoryId);
+        // Then parent category
+        if ( $ancestorCategories->parentId != 0 ) {
+            $data['ancestorCategories'][] = $this->categoryDTO($ancestorCategories->parentId);
+        }else{
+            $data['ancestorCategories'] = [];
+        }
+
+        $data['totalSoldQuantity'] = 0;
+        $data['productTags'] = $product->tags()->pluck('name')->toArray();
+
+        return $data;
+
+    }
+
+public function productDTO_new($productId, $qty = '')
+    {
+
+        $selections = ['id', 'productName', 'unit', 'rate', 'categoryId', 'categoryName', 'availableItems', 'parentId', 'featuredImage', 'shortDesc', 'highlights', 'description', 'entryDate', 'quantity', 'featured', 'user_id as userId', 'newProduct', 'merchantId', 'discountPercent', 'actualRate', 'created_at'];
+
+        $product = Product::where('id', $productId)->select($selections)->first();
+
+        $product->featuredImage = url('/') . '/uploads/products/' . $product->featuredImage;
+        
+        $data = [];
+
+        $data['productId'] = $product->id;
+        $data['productName'] = $product->productName;
+        $data['unit'] = $product->unit;
+        $data['rate'] = (float) $product->rate;
+        $data['categoryId'] = $product->categoryId;
+        $data['categoryName'] = $product->categoryName;
+        $data['availableItems'] = $product->availableItems;
+        $data['parentId'] = $product->parentId;
+
+        // Images here
+        $data['images'][0]['imageId'] = 1;
+        $data['images'][0]['image'] = $product->featuredImage;
+
+        $i = 1;
+        if ( count($product->images) ) {
+            foreach ($product->images as $img) {
+                
+                $data['images'][$i]['imageId'] = $i + 1;
+                $data['images'][$i]['image'] = url('/') . '/uploads/products/' . $img->image;
+
+                $i++;
+            }
+        }
+
+        $data['shortDesc'] = $product->shortDesc;
+        $data['highlights'] = $product->highlights;
+        $data['description'] = $product->description;
+        $data['entryDate'] = $product->created_at->format('Y-m-d H:g:s');
+
+        
+        $data['quantity'] = $qty;
+        
+        $data['featured'] = $product->featured ? true : false;
+        $data['userId'] = $product->userId;
+        // $data['orderQuantity'] = $qty;
 
         $data['newProduct'] = $product->newProduct ? true : false;
         $data['discountPercent'] = (float) $product->discountPercent;
@@ -775,8 +983,8 @@ class ApiController extends Controller
             $data['reviewId'] = $review->reviewId;
             $data['reviewTitle'] = $review->reviewTitle;
             $data['reviewDesc'] = $review->reviewDesc;
-            $data['pros'] = $review->pros;
-            $data['cons'] = $review->cons;
+            $data['pros'] = (string) $review->pros;
+            $data['cons'] = (string) $review->cons;
             $data['rating'] = $review->rating;
             $data['reviewDate'] = $review->reviewDate;
             $data['userId'] = $review->userId;
@@ -837,6 +1045,19 @@ class ApiController extends Controller
         
     }
 
+    public function getOrderDetails_new($orderId)
+    {
+
+        $data = $this->orderDTO_new($orderId);
+        
+        if ( $data ) {
+            return $this->jsonResponse($data, 200);
+        }
+
+        return $this->jsonResponse($data, 404, 'No data');
+        
+    }
+
     /*  Retrieve all orders
         @GET("/api/v1/order/user/{userId}")
         Call<Response> getAllOrders(@Header("Authorization") String token,
@@ -861,6 +1082,7 @@ class ApiController extends Controller
     }
 
     
+
     /*
         @POST("/api/v1/order/confirm")
         Call<Response> makeOrder(@Body NewOrderDto newOrderDto);
@@ -873,42 +1095,72 @@ class ApiController extends Controller
         $uniqueOrderIdentifier = str_random(18);
 
         try {
-            $user = (object) $request->user;
-            $full_name = $user->fName . ' ' . $user->lName;
+         $email = '';
+         $user = (object) $request->user;
+         $full_name = $user->fName . ' ' . $user->lName;
+         // $email = $request->email;
             // Add shipping details
             if ( $request->shippingAddress ) {
                 
                 $shippingAddress = (object) $request->shippingAddress;
 
+                if(isset( $shippingAddress->email ) ){
+                    $email = $shippingAddress->email;
+                }else{
+                    $email = '';
+                }
+                // echo "email : " . $email;
                 $returnid = DB::table("shipping_details")->insertGetId([
-                    'email' => $shippingAddress->email,
+                    'email' => $email,
                     'client_name' => $full_name,
-                    'address' => $request->address,
-                    'city' => $request->city,
-                    'state' => $request->state,
-                    'zipcode' => $request->zipcode,
-                    'phone' => $request->phone,
-                    'shipping_type_id' => $request->shippingTypeId,
+                    'address' => $shippingAddress->address,
+                    'city' => $shippingAddress->city,
+                    'state' => $shippingAddress->state,
+                    'zipcode' => $shippingAddress->zipcode,
+                    'phone' => $shippingAddress->phone,
+                    'shipping_type_id' => $shippingAddress->shippingTypeId,
                     'customer_id' => $request->orderedBy,
                 ]);
 
             }
 
-            if($request->amount){
-                $amount = $request->amount;
-                $status = 1;
-                $payment_method_id = 2;
+            if ( $request->paymentDetailsId == 1) {
+                // $paymentdetail = (object) $request->paymentDetail;
+                // $paymentType = $paymentDetail->paymentType;
+                $paymentid = DB::table("payment_details")->insertGetId([
+                    'payment_method_id' => 1,
+                    'amount' => 0,
+                    'status' => 0,
+                ]);
+            }elseif( $request->paymentDetailsId == 3){
+                // for payment id
+                $paymentid = DB::table("payment_details")->insertGetId([
+                    'payment_method_id' => 3,
+                    'amount' => 0,
+                    'status' => 1,
+                ]);
             }else{
-                $amount = 0;
-                $status = 0;
-                $payment_method_id = 1;
+                // nothing
             }
-            // for payment id
-            $paymentid = DB::table("payment_details")->insertGetId([
-                'payment_method_id' => $payment_method_id,
-                'amount' => $amount,
-                'status' => $status,
-            ]);
+
+            // if($paymentType == 3){
+            //     // for payment id if khalti
+            //     $paymentid = DB::table("payment_details")->insertGetId([
+            //         'payment_method_id' => 2,
+            //         'amount' => 0,
+            //         'status' => 1,
+            //     ]);
+            // }
+
+            // else{
+            //     // for payment id
+            //     $paymentid = DB::table("payment_details")->insertGetId([
+            //         'payment_method_id' => 1,
+            //         'amount' => 0,
+            //         'status' => 0,
+            //     ]);
+            // }
+            
         } catch (Exception $exception) {
             $errormessage = $exception->getMessage();
 
@@ -960,16 +1212,11 @@ class ApiController extends Controller
                     $OrderDetail->save();
 
                 }
-
             }
-
-            
-
         } catch (Exception $exception) {
             
             $errormessage = $exception->getMessage(); 
             return $this->jsonResponse($data, 404, $errormessage);
-
         }
 
         $data = $this->orderDTO($orderId);
@@ -983,8 +1230,6 @@ class ApiController extends Controller
 
     }
 
-    
-    
     private function orderDTO($orderId)
     {
 
@@ -1011,25 +1256,54 @@ class ApiController extends Controller
     {
 
         $selections = [
-                        'order_new.id as orderId', 
-                        'order_detail_new.productId as productId', 
+                        'id as orderId', 
+                        'order_details.product_id as productId', 
                         'order_date as orderDate', 
-                        'paymentStatus as orderStatus',
-                        'shippingAddress as shippingAddress',
-                        'phone as phone',
-                        'city as city',
-                        'paymentType as paymentType',
-                        'paymentStatus as paymentStatus',
-                        // 'quantity'
+                        'order_status as orderStatus',
+                        'shipping_details_id as shippingDetailsId',
+                        'payment_details_id as paymentDetailsId',
+                        'ordered_by as orderedBy',
+                        'quantity as quantities',
+                        'order_details.order_details_id as orderDetailsId'
                     ];
 
-        $order = OrderNew::select($selections)
-                        ->join('order_detail_new', 'order_detail_new.orderId', '=', 'order_new.id')
-                        ->where('order_new.id', $orderId)
-                        ->first();
-        return $order;
+        $order = Order::select($selections)
+                        ->join('order_details', 'order_details.order_id', '=', 'orders.id')
+                        ->where('orders.id', $orderId)
+                        ->get();
+
+                        $data = [];
+                        foreach ($order as $o) {
+
+                            $data[] = $this->productDTO_new($o->productId, $o->quantities);
+                        }
+        return $data;
 
     }
+
+    // private function orderDTO_new($orderId)
+    // {
+
+    //     $selections = [
+    //                     'order_new.id as orderId', 
+    //                     'order_detail_new.productId as productId', 
+    //                     'order_date as orderDate', 
+    //                     'paymentStatus as orderStatus',
+    //                     'shippingAddress as shippingAddress',
+    //                     'phone as phone',
+    //                     'city as city',
+    //                     'paymentType as paymentType',
+    //                     'paymentStatus as paymentStatus',
+    //                     // 'quantity'
+    //                 ];
+
+    //     $order = OrderNew::select($selections)
+    //                     ->join('order_detail_new', 'order_detail_new.orderId', '=', 'order_new.id')
+    //                     ->where('order_new.id', $orderId)
+    //                     ->first();
+    //     return $order;
+
+    // }
 
     private function jsonResponse($data, $status, $message = 'Success')
     {
@@ -1112,16 +1386,16 @@ class ApiController extends Controller
                     if ( $count == 0 ) {
                         
                         $ffname = 'featured-' . str_slug( $product->productName ) . '-' . str_random(8) . '.' . $image->getClientOriginalExtension();
-                        Image::make($image)->resize(520, 512)->save('uploads/products/'. $ffname);
-                        Image::make($image)->resize(300, 320)->save('uploads/products/thumbnails/'. $ffname);
+                        Image::make($image)->resize(270, 270)->save('uploads/products/'. $ffname);
+                        Image::make($image)->resize(185, 185)->save('uploads/products/thumbnails/'. $ffname);
                     
                     }else{
                         
                         $newfilename = str_slug( $product->productName ) . '-' . $image->getSize() . str_random(8) . '.'. $image->getClientOriginalExtension();
                         $filenames[] = $newfilename;
 
-                        Image::make($image)->resize(520, 512)->save('uploads/products/'. $newfilename);
-                        Image::make($image)->resize(300,320)->save('uploads/products/thumbnails/'. $newfilename);
+                        Image::make($image)->resize(270, 270)->save('uploads/products/'. $newfilename);
+                        Image::make($image)->resize(185,185)->save('uploads/products/thumbnails/'. $newfilename);
 
                     }
                     $count++;
@@ -1175,6 +1449,42 @@ class ApiController extends Controller
 
     }  
 
+    public function getAllOrdersAdmin() {
+
+        $orders = Order::select('id')->where('order_status', 1)->latest()->get();
+        
+        $data = [];
+        if ( count($orders) ) {
+            
+            foreach ($orders as $order) {
+                $data[] = $this->orderDTO($order->id);
+            }
+            
+            return $this->jsonResponse($data, 200);
+        }
+
+        return $this->jsonResponse($data, 404, 'No data');
+
+    }
+
+    public function getAllCancelledOrdersAdmin() {
+
+        $orders = Order::select('id')->where('order_status', 0)->orderBy('order_date')->get();
+
+        $data = [];
+        if ( count($orders) ) {
+            
+            foreach ($orders as $order) {
+                $data[] = $this->orderDTO($order->id);
+            }
+            
+            return $this->jsonResponse($data, 200);
+        }
+
+        return $this->jsonResponse($data, 404, 'No data bb');
+
+    }
+
     public function cancel_order(Request $request, $order_id){
     
 
@@ -1216,10 +1526,6 @@ class ApiController extends Controller
             'amount'  => ($request->amount)
         ));
 
-        $order_id = $request->order_id;
-        $pdi = Order::select('payment_details_id')->where('id', $order_id)->first();
-        
-
         $url = "https://khalti.com/api/payment/verify/";
 
         # Make the call using API.
@@ -1238,215 +1544,244 @@ class ApiController extends Controller
         curl_close($ch);
 
         $token = json_decode($response, TRUE);
-        if (isset($token['idx'])&& $status_code == 200) 
+        // if (isset($token['idx'])&& $status_code == 200) 
+        if ($status_code == 200) 
         {
-            // $pay_upd = DB::table('payment_details')::where('payment_id', $pdi)->update(['amount' => $request->amount, 'status' => 1, 'payment_date' => date("Y-m-d")]);
             
-            // makeOrder_khalti($request);
-            // $content = new Request();
-            // $content->full_name = $request->fName . ' ' . $request->lName;
-            // $content->username = $request->username;
-            // $content->shippingAddress = $request->shippingAddress;
-            // $content->email = $request->email;
-            // $content->number = $request->number;
-
-            // $content->state = $request->state;
-            // $content->city = $request->city;
-            // $content->zipcode = $request->zipcode;
-
-            // $content->product_id = $request->product_id;
-            // $content->rate = $request->rate;
-            // $content->supplier_id = $request->supplier_id;
-            // $content->quantities = $request->quantities;
-
-            // $content->orderedBy = $request->orderedBy;
-            // $content->shipmethod = $request->shipmethod;
-
-            // $content->amount = $request->amount;
-            // $this->makeOrder_khalti($content);
-            // return true;
-            return $this->jsonResponse($token['state'], 200, 'Successful.');
+            return $this->jsonResponse($response, 200, 'Successful.');
             
         }
-        // return false;
-        return $this->jsonResponse($token['state'], 404, 'Something went Wrong , Try Again !!');
+       
+        return $this->jsonResponse($response, $status_code, 'Something went Wrong , Try Again !!');
 
     }
 
-    public function makeOrder_khalti(Request $request)
-    {
-        $data = '';
-        $orderId = 0;
-        $returnid = 0;
-        $uniqueOrderIdentifier = str_random(18);
+    public function getSearchProduct($productName, Request $request) {
+        $last_seen = $request->last_seen;
+        $pageSize = $request->pageSize;
+        $action = $request->action;
 
-        try {
-            $user = (object) $request->user;
-            $full_name = $user->fName . ' ' . $user->lName;
-            // Add shipping details
-            if ( $request->shippingAddress ) {
-                
-                $shippingAddress = (object) $request->shippingAddress;
+        $data = [];
+        
+        if($last_seen == 0){
+            // $products = DB::table('order_details')->select('product_id')->groupBy('product_id')->orderBy('product_id', 'desc')->get()->take($pageSize);
 
-                $returnid = DB::table("shipping_details")->insertGetId([
-                    'email' => $shippingAddress->email,
-                    'client_name' => $full_name,
-                    'address' => $shippingAddress->address,
-                    'city' => $shippingAddress->city,
-                    'state' => $shippingAddress->state,
-                    'zipcode' => $shippingAddress->zipcode,
-                    'phone' => $shippingAddress->phone,
-                    'shipping_type_id' => $shippingAddress->shippingTypeId,
-                    'customer_id' => $request->orderedBy,
-                ]);
+            $products = Product::where('productName', 'like', '%'.$productName.'%')->latest()->get()->take($pageSize);
+        }else{
+            if($action == "first"){
+                // nothing
 
+                $products = Product::where('productName', 'like', '%'.$productName.'%')->where('id', '<', $last_seen)->latest()->get()->take($pageSize);
+
+            }elseif($action == "next"){
+                $products = Product::where('productName', 'like', '%'.$productName.'%')->where('id', '<', $last_seen)->latest()->get()->take($pageSize);
+            }else{
+                $products = Product::where('productName', 'like', '%'.$productName.'%')->where('id', '<', $last_seen)->latest()->get()->take($pageSize);
             }
-
-            // for payment id
-            $paymentid = DB::table("payment_details")->insertGetId([
-                'payment_method_id' => 1,
-                'amount' => $request->amount,
-                'status' => 1,
-            ]);
-        } catch (Exception $exception) {
-            $errormessage = $exception->getMessage();
-
-            return $this->jsonResponse($data, 404, $errormessage);
-        }
-
-        try {
-            // Order
-            $order = new Order;
-
-            $order->order_date = date('Y-m-d');
-            $order->shipping_details_id = $returnid;
-            // $order->payment_details_id = $request->paymentDetailsId;
-            $order->payment_details_id = $paymentid;
-            // $order->order_status = $request->orderStatus;
-            $order->ordered_by = $request->orderedBy;
-            $order->unique_order_identifier = $uniqueOrderIdentifier;
-
-            $order->save();
             
-            $orderId = $order->id;
-
-        } catch (Exception $exception) {
-            $errormessage = $exception->getMessage();
-
-            return $this->jsonResponse($data, 404, $errormessage);
         }
 
-        try {
-            $productIds = $request->productIds;
-            $quantities = $request->quantities;
+        
 
-            if ( $productIds && $quantities ) {
-                $comb = array_combine($productIds, $quantities);
-
-                foreach ($comb as $p => $q) {
-                    $rates = Product::find($p);
-                    // Order Details
-                    $OrderDetail = new OrderDetail;
-
-                    $OrderDetail->product_id = $p;
-                    $OrderDetail->order_id = $orderId;
-                    $OrderDetail->quantity = $q;
-                    // newly added
-                    $OrderDetail->rate = $rates->rate;
-                    $OrderDetail->save();
-                }
+        if ( count($products) ) {
+        
+            foreach ($products as $product) {
+                $data[] = $this->productDTO($product->id);
             }
-
-        } catch (Exception $exception) {
-            $errormessage = $exception->getMessage(); 
-            return $this->jsonResponse($data, 404, $errormessage);
-        }
-
-        $data = $this->orderDTO($orderId);
-
-        if ( $data ) {
             return $this->jsonResponse($data, 200);
         }else{
-            return $this->jsonResponse([], 404, 'Invalid Order.');
+            return $this->jsonResponse($data, 200, 'No data.');
         }
     }
 
+    
+    public function saveToken(Request $request){
 
-    public function transaction(Request $request)
-    {
-    	$data = [
-    		// 'user_id' 	=> $request->user_id,
-    		// 'mobile' 	=> $request->mobile,
-    		'amount' 	=> $request->amount,
-    		'pre_token' => $request->token
-    	];
+        $tokens = DB::table('deviceToken')->select('id')->where('token', '=', $request->token)->get();
 
-        try 
-        {
-            //before verification for reference purposes 
-            // $khalti = $this->khalti->create($data);
-
-            $khalti = new Khalti;
-            $khalti->amount = $request->amount;
-            $khalti->pre_token = $request->token;
-            $khalti->save();
-
-            // echo $khalti->amount;die;
-            $output = $this->verification($khalti);
-
-            if ($output) 
-            {
-                return response()->json([
-                    'success' => '  Your Account is succesfully credited'
-                ],200);
-            }
+        if(count($tokens)){
             
-        } 
-        catch (Exception $e) 
-        {
-            return response()->json([
-                    'error' => '  Something went Wrong , Try Again !!'
-                ],404);
+            $k = DB::table('deviceToken')
+                ->where('id', $tokens[0]->id)
+                ->update(['device' => $request->device,  'status' => $request->status]);
+        }else{
+            
+            $k = DB::table('deviceToken')->insert([
+                ['user_id' => $request->userId, 'device' => $request->device, 'token' => $request->token, 'status' => $request->status]
+            ]);
+        }
+        
+        if($k){
+            return $this->jsonResponse([], 200, 'Successful.');
+        }else{
+            return $this->jsonResponse([], 200, 'Unsuccessful');
         }
 
     }
 
-    // Verification after trannsaction
-    public function verification($khalti)
-    {
-    	$args = http_build_query(array(
-                    'token' => $khalti->pre_token,
-                    'amount'  => ($khalti->amount * 100)
-                ));
-        
-        $url = "https://khalti.com/api/payment/verify/";
+    public function getDeviceToken(){
+        $token = DB::table('deviceToken')->latest()->get();
 
-        # Make the call using API.
+        return $token;
+    }
+
+    public function notification($token='/topics/allDevices', $title="के तपाई पाथिभरा हार्डवयर भिजिट गर्नुभयो?.")
+    {
+        $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+        $token=$token;
+
+        $notification = [
+            'title' => $title,
+            'body' => "Checkout Our New Product : Wristwatch",
+            'sound' => true,
+            'icon' => "chapter/icon_a22.png",
+            // 'click_action' => 'http://pathivarahardware.com/api/products/168'
+        ];
+        
+        
+        $data = [
+            'to'        => '/topics/allDevices', //single token
+            'notification'        => $notification, 
+            // 'message' => "के तपाईले आफ्नो बाथरुममा धारा जडान गर्नुभयो?",
+        ];
+
+        $headers = [
+            'Authorization: key=AAAAWNxjAVk:APA91bHBmCZwcw1Ri-qi1_vLQO9O4tV1wgGeUbOhq7lB33gNPmGoDLQtUzDE5tb_dDEGXJZ18czbZPhLBXYDedqYUMePxAoRl6U27uLf0T9x5DVBEvIwSN3DCDa3AZx2efgJVkYv-nBQ',
+            'Content-Type: application/json'
+        ];
+
+
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,$args);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-        $headers = ['Authorization: Key test_secret_key_206b9b6e5059419aa8451f94404707d5'];
+        curl_setopt($ch, CURLOPT_URL,$fcmUrl);
+        curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        // Response
-        $response = curl_exec($ch);
-        $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        $result = curl_exec($ch);
         curl_close($ch);
-        $token = json_decode($response, TRUE);
-        
-        if (isset($token['idx'])&& $status_code == 200) 
-        {
-            Khalti::update(['status' => 1, 'verified_token' => $token['idx'] ]);
-            return $this->jsonResponse($token['state'], 200, 'Successful.');
-            // return true;
-            
-        }
-        return $this->jsonResponse($token['state'], 404, 'Something went Wrong , Try Again !!');
-        // return false;
+
+        return true;
     }
 
+    // extra details
+    public function getextraDetails($orderId) {
+        $data = [];
+        
+        $data = $this->extraDetails($orderId);
+        // $data[] = $order;
+        // return $order;
+        if($data){
+            return $this->jsonResponse($data, 200, 'Success');
+        }else{
+            return $this->jsonResponse([], 200, 'No data');
+        }
+        
+    }
 
+    public function insert_product_review(Request $request){
+
+        
+        if ($request->reviewTitle) {
+            if($request->userId){
+                $user = User::find($request->userId);
+                $email = $user->email;
+            }
+            $productN = Product::find($request->productId);
+            $productName = $productN->productName;
+
+            $review = new Reviews;
+            
+            $review->reviewTitle = $request->reviewTitle;
+            // $review->email = $request->email;
+            $review->reviewDesc = $request->reviewDesc;
+            $review->rating = $request->rating;
+            $review->userId = $request->userId;
+            $review->email = $email;
+            $review->productId = $request->productId;
+            $review->productName = $productName;
+
+            $review->save();
+
+            $product = Product::where('id', $request->productId)->first();
+
+            $nosreviews = $product->nosReview;
+
+            $product->nosReview = $nosreviews + 1;
+
+            $product->save();
+        }
+        
+        if ($request->rating) {
+            DB::table('ratings')->insert([
+                                            'user_id' => $request->userId,
+                                            'product_id' => $request->productId,
+                                            'rating' => $request->rating,
+                                        ]);
+        }
+
+        if($review){
+            return $this->jsonResponse([], 200, 'Successful.');
+        }else{
+            return $this->jsonResponse([], 200, 'Unsuccessful');
+        }
+
+    }
+
+    public function extraDetails($orderId){
+        $selections = [
+                        'id as orderId', 
+                        'payment_details.amount as totalCost',
+                        'shipping_details.client_name as customerName',
+                        'shipping_details.email as customerEmail',
+                        'shipping_details.address as customerAddress',
+                        'shipping_details.phone as customerPhoneNo',
+                        'payment_details.status as paymentStatus',
+                    ];
+
+        $order = Order::select($selections)
+                        
+                        ->join('payment_details', 'payment_details.payment_id', '=', 'orders.payment_details_id')
+                        ->join('shipping_details', 'shipping_details.shipping_details_id', '=', 'orders.shipping_details_id')
+                        ->where('orders.id', $orderId)
+                        ->first();
+                        
+        $total_cost = DB::table('order_details')->select('quantity', 'rate')->where('order_id', $orderId)->get();
+        if($total_cost){
+            $cc = 0;
+            foreach ($total_cost as $val) {
+                $price = $val->quantity * $val->rate;
+                $cc += $price;
+            }
+        }else{
+            $cc = 0;
+        }
+        
+
+        $pay = 0;
+        if($order){
+            if($order->paymentStatus == 1){
+                $pay = 'Paid';
+            }elseif($order->paymentStatus == 0){
+                $pay = 'Pending';
+            }else{
+                $pay = 'N/A';
+            }
+
+            $data['orderId'] = $order->orderId;
+            $data['customerName'] = $order->customerName;
+            $data['customerEmail'] = $order->customerEmail;
+            $data['customerAddress'] = $order->customerAddress;
+            $data['customerPhoneNo'] = (string) $order->customerPhoneNo;
+            $data['paymentStatus'] = $pay;
+            $data['totalCost'] = (string) $cc;
+
+        }else{
+            $data = '';
+        }
+
+        return $data;
+    }
+
+    
 }

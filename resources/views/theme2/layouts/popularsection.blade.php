@@ -1,5 +1,5 @@
 <!-- Start Most Popular -->
-	<div class="product-area most-popular section">
+	<div class="product-area most-popular pt-4" style="background: #f2f2f2">
         <div class="container">
             <div class="row">
 				<div class="col-12">
@@ -16,7 +16,7 @@
                     <div class="owl-carousel popular-slider">
                     @foreach( $featured_products as $product )
 						<!-- Start Single Product -->
-						<div class="single-product">
+						<div class="single-product" style="background: #fff;padding: 12px;">
 							<div class="product-img">
 								<a href="{{ route('view.product.new2', $product->slug) }}">
 									<img class="default-img" src="{{ asset('uploads/products/thumbnails/' . $product->featuredImage ) }}" alt="#">
@@ -38,8 +38,13 @@
 							<div class="product-content">
 								<h3><a href="{{ route('view.product.new2', $product->slug) }}">{{ $product->productName }}</a></h3>
 								<div class="product-price">
-									NRs. <span class="old">{{ $product->discountPercent > 0 ? $product->actualRate : '' }}</span>
-									<span>{{ $product->rate }}</span>
+									 {{-- <span class="old">NRs.{{ $product->discountPercent > 0 ? $product->actualRate : '' }}</span> --}}
+									<span>NRs.{{ $product->rate }}</span>
+									@if($product->actualRate - $product->rate > 0)
+										<del>{{ $product->actualRate }}</del>
+									@else
+
+									@endif
 								</div>
 							</div>
 						</div>

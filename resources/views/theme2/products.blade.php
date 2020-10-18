@@ -42,6 +42,21 @@
 							</div>
 							<!--/ End Single Widget -->
 						</div>
+
+						<div class="shop-sidebar pt-4">
+							<!-- Single Widget -->
+							<div class="single-widget category">
+								<h3 class="title">Brands</h3>
+								<ul class="categor-list">
+								@foreach( App\Brand::latest()->get() as $brand )
+									<li><a href="{{ route('products.brands', $brand->brandId) }}">{{ $brand->brandName }}</a></li>
+								@endforeach
+								</ul>
+							</div>
+							<!--/ End Single Widget -->
+						</div>
+
+
 					</div>
 					<div class="col-lg-9 col-md-8 col-12">
 						<div class="row">
@@ -95,6 +110,9 @@
 										<h3><a href="{{ route('view.product.new2', $product->slug) }}">{{ $product->productName }}</a></h3>
 										<div class="product-price">
 											<span>NRs. {{ $product->rate }}</span>
+											@if($product->actualRate - $product->rate > 0)
+												<del>{{ $product->actualRate}}</del>
+											@endif
 										</div>
 									</div>
 								</div>

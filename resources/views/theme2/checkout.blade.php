@@ -29,7 +29,7 @@
 <section class="shop checkout section">
 	<div class="container">
 
-		<form class="form" method="post" action="{{ route('checkout.theme2') }}">
+		<form class="form" method="post" action="{{ route('checkout.newstore') }}">
 			{{ csrf_field() }}
 
 		<div class="row"> 
@@ -81,21 +81,42 @@
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
 									<label>Address<span>*</span></label>
-									<input type="text" name="delivery_address" placeholder="" required="required">
+									<input type="text" name="shippingAddress" placeholder="" required="required">
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-12">
+								<div class="form-group">
+									<label>State/Province<span>*</span></label>
+									<select name="state" id="state" required>
+                                        <option value="">Select Province</option>
+                                        <option value="1">Province 1</option>
+                                        <option value="2">Province 2</option>
+                                        <option value="3">Bagmati Province</option>
+                                        <option value="4">Gandaki</option>
+                                        <option value="5">Province 5</option>
+                                        <option value="6">Karnali</option>
+                                        <option value="7">Sudurpaschim</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-6 col-md-6 col-12">
+								<div class="form-group">
+									<label>City</label>
+									<input type="text" name="city" value="{{ old('city') }}" class="form-control"  id="city" placeholder="City" required>
 								</div>
 							</div>
 							<div class="col-lg-6 col-md-6 col-12">
 								<div class="form-group">
 									<label>Postal Code</label>
-									<input type="text" name="post" placeholder="">
+									<input type="number" name="zipcode" placeholder="">
 								</div>
 							</div>
-							<div class="col-12">
+							{{-- <div class="col-12">
 								<div class="form-group create-account">
 									<input id="cbox" type="checkbox">
 									<label>Create an account?</label>
 								</div>
-							</div>
+							</div> --}}
 						</div>
 					{{-- </form> --}}
 					<!--/ End Form -->
@@ -121,12 +142,13 @@
 										<p class="product-name"><a href="{{ route('view.product.new2', $item->model->slug) }}">{{ $item->model->productName }}</a></p>
 										<p class="product-des">{{ $item->model->categoryName }}</p>
 									</td>
-									<td class="total-amount" data-title="Total"><span>{{ $item->model->rate }}</span></td>
+									<td class="total-amount" data-title="Total"><span>{{ $item->model->rate * $item->qty }}</span></td>
+
 								<input type="hidden" name="product_id[]" value="{{ $item->model->id }}">
 								<input type="hidden" name="supplier_id[]" value="{{ $item->model->user_id }}">
-								<input type="hidden" name="username" value="{{ Auth::user()->username }}">
+								<input type="hidden" name="rate[]" value="{{ $item->model->rate }}">
+								<input type="hidden" name="quantities[]" value="{{ $item->qty }}">
 
-								<input type="hidden" name="theme_no" value="2">
 								</tr>
 							@endforeach
 							</tbody>
@@ -148,9 +170,9 @@
 						<h2>Payments</h2>
 						<div class="content">
 							<div class="checkbox">
-								<label class="checkbox-inline" for="1"><input name="updates" id="1" type="checkbox"> Check Payments</label>
+								{{-- <label class="checkbox-inline" for="1"><input name="updates" id="1" type="checkbox"> Check Payments</label> --}}
 								<label class="checkbox-inline" for="2"><input name="news" id="2" type="checkbox"> Cash On Delivery</label>
-								<label class="checkbox-inline" for="3"><input name="news" id="3" type="checkbox"> PayPal</label>
+								<label class="checkbox-inline" for="3"><input name="news" id="3" type="checkbox"> Khalti</label>
 							</div>
 						</div>
 					</div>
@@ -166,6 +188,14 @@
 					<div class="single-widget get-button">
 						<div class="content">
 							<div class="button">
+
+								@if(Auth::user())
+									<input type="hidden" name="username" value="{{ Auth::user()->username }}">
+									<input type="hidden" name="orderedBy" value="{{ Auth::user()->id }}">
+                            	@else
+									<input type="hidden" name="username" value="Guest">
+									<input type="hidden" name="orderedBy" value="">
+                            	@endif
 								<button class="btn"><input type="hidden" name="btnsubmit" class="btn" value="Proceed">Proceed</button>
 								{{-- <a href="#" class="btn">proceed to checkout</a> --}}
 							</div>

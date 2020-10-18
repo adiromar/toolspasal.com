@@ -47,7 +47,7 @@
     @auth
         @if(Auth::user()->roles()->first()->role == 'Supplier') 
             
-            <li  class="list-group-item"><a href="{{ url('previewCRUD') }}"><i class="fa fa-plus"></i> Add/Edit Product</a></li>
+            <li  class="list-group-item"><a href="{{ url('previewEdit') }}"><i class="fa fa-plus"></i> Add/Edit Product</a></li>
                 
         @endif
     @endauth

@@ -35,6 +35,18 @@
                                 
                                 <div class="form-group">
                                     <div class="row">
+
+                                        <div class="col-md-6">
+                                            <label>Update Featured Image *:</label>
+                                            <input type="file" name="image" class="form-control">
+                                        </div>
+                                        <div class="col-md-2">
+                                            @if( $brand->image )
+                                                <img src="{{ asset( $brand->image ) }}" width="80" height="70" alt="{{ $brand->brandName }}">
+                                            @endif
+                                        </div>
+
+
                                         <div class="col-md-3">
                                             <label>Status</label>
                                             <select name="status" class="form-control" required>

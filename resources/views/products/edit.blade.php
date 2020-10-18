@@ -129,6 +129,20 @@
                                         <option value="1" {{ $product->featured ? 'selected' : '' }}>Yes</option>
                                     </select>
                                 </div>
+                                <div class="col-md-5">
+                                    <label>Brands</label>
+                                    <select name="brand_id" id="" class="form-control">
+                                        <option value="">--Select--</option>
+                                        @if( count($brands) )
+                                        @foreach ( $brands as $brand )
+                                            <option value="{{ $brand->brandId }}" {{ $brand->brandId == $product->brand_id ? 'selected' : '' }}>{{ $brand->brandName }}</option>
+                                        @endforeach
+
+                                        @else
+                                            <option value="">----------------</option>
+                                        @endif
+                                    </select>
+                                </div>
                                 
 
                             </div>

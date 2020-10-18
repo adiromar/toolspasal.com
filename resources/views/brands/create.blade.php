@@ -35,6 +35,11 @@
                                 
                                 <div class="form-group">
                                     <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Featured Image *:</label>
+                                            <input type="file" name="image" class="form-control">
+                                        </div>
+
                                         <div class="col-md-3">
                                             <label>Status</label>
                                             <select name="status" class="form-control" required>

@@ -234,7 +234,7 @@ Version:1.0
 /* Logo */
 .header .logo {
 	float: left;
-	margin-top: 35px;
+	/* margin-top: 35px; */
 	-webkit-transition: all 0.4s ease;
 	-moz-transition: all 0.4s ease;
 	transition: all 0.4s ease;
@@ -366,7 +366,7 @@ Version:1.0
 }
 .header.shop .logo {
 	float: left;
-	margin-top: 35px;
+	/* margin-top: 35px; */
 }
 .header.shop .top-contact {
 	margin-top:0px;
@@ -624,7 +624,7 @@ Version:1.0
 }
 .header.shop .logo {
 	float: left;
-	margin: 19px 0 0;
+	/* margin: 19px 0 0; */
 }
 .header.shop .top-contact {
 	margin-top:0px;
@@ -4967,3 +4967,62 @@ Version:1.0
     color: #fff;
     padding: 0 8px;
 }
+
+del{
+	color: red;
+}
+.del-price{
+	background: #fff;
+	color: red;
+	margin-top: 15px;
+    font-weight: 500;
+    display: inline-block;
+    padding: 2px 18px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/*.main-category{
+	opacity: 0;
+}
+
+.cat-heading:hover .main-category{
+	background: black;
+	opacity: 1;
+}*/
+
+.header .all-category .main-category{
+	opacity:0;
+	visibility:hidden;
+	-webkit-transition:all 0.4s ease;
+	-moz-transition:all 0.4s ease;
+	transition:all 0.4s ease;
+}
+.header .all-category:hover .main-category{
+	opacity:1;
+	visibility:visible;
+}
+
+ /*Small devices (landscape phones, 576px and up)*/
+@media (max-width: 767.98px) { 
+	.feat-nav a {
+	    font-size: 14px;
+	    font-weight: 600;
+	    color: #231f20;
+	    -webkit-transition: all 0.33s;
+	    -moz-transition: all 0.33s;
+	    transition: all 0.33s;
+	    border: 1px solid #ddd;
+	    margin: 0 -1px -1px 0;
+	    background: #fff;
+	    display: flex;
+	    align-items: center;
+	    padding: 15px 15px 20px 15px;
+	     width: auto !important; 
+	    justify-content: center;
+	    flex-direction: column;
+	}
+}
+
+.show {display: block;}
